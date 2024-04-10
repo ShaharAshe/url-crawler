@@ -32,7 +32,7 @@ public class Controller {
 
         this.format = new ArrayList<>();
 
-        // add to format from factory //
+        // TODO: add to format from factory //
 
         // creating the thread pool
         this.pool = Executors.newFixedThreadPool(this.poolSize);
