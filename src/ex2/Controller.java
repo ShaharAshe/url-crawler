@@ -21,6 +21,7 @@ public class Controller {
     private int numberOfLines;
     private final HashMap<String, ArrayList<String>> urlsIO;
     private final ExecutorService pool;
+    private ArrayList<OutFormat> format;
 
     public Controller(String[] args) throws IOException {
         // take the data from argument vector
@@ -28,6 +29,10 @@ public class Controller {
         this.poolSize = Integer.parseInt(args[POOL]);
         this.fileName = args[FILENAME];
         this.numberOfLines = 0;
+
+        this.format = new ArrayList<>();
+
+        // add to format from factory //
 
         // creating the thread pool
         this.pool = Executors.newFixedThreadPool(this.poolSize);
