@@ -5,6 +5,8 @@ public class Main {
         try{
             Controller urlCrawler = new Controller(args);
             urlCrawler.crawl();
+            System.out.println("=======================\n");
+            urlCrawler.print();
         } catch (ArrayIndexOutOfBoundsException aioobe) {
             System.err.println("Usage: java Main <output format> <pool size> <file name>");
         } catch (NumberFormatException e) {

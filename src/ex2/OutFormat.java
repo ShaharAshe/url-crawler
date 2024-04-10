@@ -1,6 +1,8 @@
 package ex2;
 
+import java.net.http.HttpResponse;
+
 public interface OutFormat {
     public void start();
-    public void end();
+    public String end(HttpResponse<String> response);
 }

@@ -10,6 +10,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 public class Controller {
     private static final int FORMAT = 0,
@@ -32,7 +33,7 @@ public class Controller {
 
         this.format = new ArrayList<>();
 
-        // add to format from factory //
+        addFormatOut();
 
         // creating the thread pool
         this.pool = Executors.newFixedThreadPool(this.poolSize);
@@ -40,10 +41,12 @@ public class Controller {
         // read the urls from the file and save the addresses in hash map by index
         this.urlsIO = new LinkedHashMap<>();
         readFile();
+    }
 
-//        for (Map.Entry<String, ArrayList<String>> entry : this.urlsIO.entrySet()) {
-//            System.out.println(entry+" |KEY:"+entry.getKey()+" |value:"+entry.getValue());
-//        }
+    private void addFormatOut(){
+        for(String f : this.outputFormat) {
+            this.format.add(new FormatFactory().createFormat(f));
+        }
     }
 
     private void readFile() throws IOException {
@@ -66,16 +69,29 @@ public class Controller {
     public void crawl() throws IOException, InterruptedException {
         System.out.println("crawl");
         ArrayList<Downloader> down = new ArrayList<>();
+
         for (Map.Entry<String, ArrayList<String>> entry : this.urlsIO.entrySet()) {
-            down.add(new Downloader(entry.getKey(), entry.getValue()));
+            down.add(new Downloader(entry.getKey(), entry.getValue(), this.format));
         }
         for (Downloader d: down){
             this.pool.execute(d);
-            d.start();
+            // d.start();
         }
         for (Downloader d: down){
-            d.join();
+
+            // d.join();
         }
         pool.shutdown();
+        this.pool.awaitTermination(Long.MAX_VALUE, TimeUnit.NANOSECONDS);
+    }
+    public void print(){
+        for (ArrayList<String> value : this.urlsIO.values()) {
+            for (String vf: value){
+                System.out.print(vf+" ");
+            }
+            if (!value.isEmpty()){
+                System.out.println();
+            }
+        }
     }
 }

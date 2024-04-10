@@ -10,14 +10,24 @@ import java.util.ArrayList;
 public class Downloader extends Thread{
     private String urlAddress;
     private ArrayList<String> urlsOut;
+    private ArrayList<OutFormat> formats;
 
-    public Downloader(String urlAddr, ArrayList<String> urlArr){
-        System.out.println("downloader con");
+    public Downloader(String urlAddr, ArrayList<String> urlArr, ArrayList<OutFormat> formatsG){
+        // System.out.println("downloader con");
         this.urlsOut = urlArr;
         this.urlAddress = urlAddr;
+        // System.out.println("this.urlsOut: "+this.urlsOut);
+        this.formats = formatsG;
     }
     public void run() {
-        System.out.println("download");
+        // System.out.println("download");
+
+        // start formats check for output
+        for (OutFormat f : formats) {
+            f.start();
+        }
+        //
+
         var request = HttpRequest.newBuilder().uri(URI.create(this.urlAddress)).GET().build();
 
         var client = HttpClient.newHttpClient();
@@ -27,16 +37,13 @@ public class Downloader extends Thread{
         } catch (IOException | InterruptedException e) {
             throw new RuntimeException(e);
         }
-
-        System.out.println("header:\n"+response.headers());
-
         if (response.headers().firstValue("Content-Type").orElse("").startsWith("image/"))
-            System.out.println(response.body());
+            System.out.println("Content-Type is an image");
         else
-            try {
-                throw new IOException(this.urlAddress+" Content-Type is not text");
-            } catch (IOException e) {
-                System.out.println("Error: "+e.getMessage());
-            }
+            return;
+
+        for (OutFormat f : this.formats) {
+            this.urlsOut.add(f.end(response));
+        }
     }
 }
