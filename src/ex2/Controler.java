@@ -32,13 +32,13 @@ public class Controler {
         System.out.println(poolSize);
         System.out.println(fileName);
         /////////////////////////////
+
         this.numberOfLines = 0;
         this.urlsIO = new HashMap<>();
 
-        /////////////////////////////
-
         readFile();
 
+        /////////////////////////////
         /////////// debug ///////////
         System.out.println("out:");
         for (int i = 1; i <= this.numberOfLines; ++i) {
@@ -63,6 +63,7 @@ public class Controler {
             throw new IOException("File "+fileName+" is empty.");
     }
 
+    // todo: this function need to call the threads
     public void crawl(){
         System.out.println("crawl");
     }
