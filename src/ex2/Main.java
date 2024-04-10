@@ -1,11 +1,9 @@
 package ex2;
 
-import java.io.IOException;
-
 public class Main {
     public static void main(String[] args) {
         try{
-            Controler urlCrawler = new Controler(args);
+            Controller urlCrawler = new Controller(args);
             urlCrawler.crawl();
         } catch (ArrayIndexOutOfBoundsException aioobe) {
             System.err.println("Usage: java Main <output format> <pool size> <file name>");
