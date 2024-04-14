@@ -18,8 +18,9 @@ public class Controller {
     private final HashMap<String, ArrayList<String>> urlsIO;
     private final ExecutorService pool;
     private final ArrayList<OutFormat> format;
+    private final String contentType;
 
-    public Controller(String[] args) throws IOException {
+    public Controller(String[] args, String contType) throws IOException {
         String fileNameTemp;
         // take the data from argument vector
         this.outputFormat = args[FORMAT].split("");
@@ -41,6 +42,8 @@ public class Controller {
         // read the urls from the file and save the addresses in hash map by index
         this.urlsIO = new LinkedHashMap<>();
         readFile();
+
+        this.contentType = contType;
     }
 
     private void addFormatOut() {
@@ -63,11 +66,13 @@ public class Controller {
         else{
             try (Scanner reader = new Scanner(System.in)) {
                 String lineCont;
-                System.out.println("write urls (or exit for stop)");
-                while (!(lineCont = reader.nextLine()).equals("exit")) {
+                final String endOut = "exit",
+                             outMsg = "write urls (or type '"+endOut+"' for stop)";
+                System.out.println(outMsg);
+                while (!(lineCont = reader.nextLine()).equals(endOut)) {
                     if (!this.urlsIO.containsKey(lineCont))
                         this.urlsIO.put(lineCont, new ArrayList<>());
-                    System.out.println("write urls (or exit for stop)");
+                    System.out.println(outMsg);
                 }
             }catch (Exception e){
                 System.err.println("Reading from terminal is failed.");
@@ -89,7 +94,7 @@ public class Controller {
         ArrayList<Downloader> down = new ArrayList<>();
 
         for (Map.Entry<String, ArrayList<String>> entry : this.urlsIO.entrySet())
-            down.add(new Downloader(entry.getKey(), entry.getValue(), this.format, "image/"));
+            down.add(new Downloader(entry.getKey(), entry.getValue(), this.format, this.contentType));
 
         for (Downloader d: down)
             this.pool.execute(d);
