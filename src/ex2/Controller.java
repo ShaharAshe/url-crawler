@@ -20,13 +20,17 @@ public class Controller {
     private final ArrayList<OutFormat> format;
 
     public Controller(String[] args) throws IOException {
+        String fileNameTemp;
         // take the data from argument vector
         this.outputFormat = args[FORMAT].split("");
         this.poolSize = Integer.parseInt(args[POOL]);
-        if(args.length != FILENAME+1)
-            this.fileName = "";
-        else
-            this.fileName = args[FILENAME];
+        try{
+            fileNameTemp = args[FILENAME];
+        }catch (Exception e){
+            fileNameTemp = "";
+        }
+
+        this.fileName = fileNameTemp;
         this.format = new ArrayList<>();
 
         addFormatOut();
@@ -72,8 +76,12 @@ public class Controller {
         }
 
         // check if the urls file is empty
-        if (this.urlsIO.isEmpty())
-            throw new IOException("File " + fileName + " is empty.");
+        if (this.urlsIO.isEmpty()) {
+            if (!this.fileName.isEmpty())
+                throw new IOException("File " + fileName + " is empty.");
+            else
+                throw new IOException("No input urls were entered.");
+        }
     }
 
     // todo: this function need to call the threads
