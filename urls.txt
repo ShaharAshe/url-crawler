@@ -3,7 +3,8 @@ https://h5p.org/sites/default/files/h5p/content/1209180/images/file-6113d5f8845d
 https://cs.hac.ac.il/
 https://mowgli.hac.ac.il/my/
 https://live.or-bit.net/hadassah/Login.aspx
-https://www.hac.ac.il/
+https://www.hac .ac.il/
+http://a.b.c/def
 https://www.hac.ac.il/Images/Facelift/brand.png
 https://www.hac.ac.il/Images/Facelift/brandBlack.png
 https://www.hac.ac.il/media/4832764/HAC-1.jpg

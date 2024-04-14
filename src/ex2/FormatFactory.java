@@ -1,9 +1,7 @@
 package ex2;
 
-import java.awt.*;
-
 public class FormatFactory {
-    public OutFormat createFormat(String f){
+    public OutFormat createFormat(String f) {
         switch (f) {
             case "s" -> {
                 return new SizeFormat();

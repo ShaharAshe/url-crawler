@@ -8,42 +8,46 @@ import java.net.http.HttpResponse;
 import java.util.ArrayList;
 
 public class Downloader extends Thread{
-    private String urlAddress;
-    private ArrayList<String> urlsOut;
-    private ArrayList<OutFormat> formats;
+    private final String urlAddress;
+    private final ArrayList<String> urlsOut;
+    private final ArrayList<OutFormat> formats;
+    private final String contentType;
 
-    public Downloader(String urlAddr, ArrayList<String> urlArr, ArrayList<OutFormat> formatsG){
-        // System.out.println("downloader con");
+    public Downloader(String urlAddr, ArrayList<String> urlArr, ArrayList<OutFormat> formatsG, String type) {
         this.urlsOut = urlArr;
         this.urlAddress = urlAddr;
-        // System.out.println("this.urlsOut: "+this.urlsOut);
         this.formats = formatsG;
+        this.contentType = type;
     }
+
     public void run() {
-        // System.out.println("download");
-
-        // start formats check for output
-        for (OutFormat f : formats) {
-            f.start();
-        }
-        //
-
-        var request = HttpRequest.newBuilder().uri(URI.create(this.urlAddress)).GET().build();
-
-        var client = HttpClient.newHttpClient();
-        HttpResponse<String> response = null;
         try {
-            response = client.send(request, HttpResponse.BodyHandlers.ofString());
-        } catch (IOException | InterruptedException e) {
-            throw new RuntimeException(e);
-        }
-        if (response.headers().firstValue("Content-Type").orElse("").startsWith("image/"))
-            System.out.println("Content-Type is an image");
-        else
-            return;
+            // start formats check for output
+            for (OutFormat f : formats)
+                f.start();
+            /////////////////////////////////
 
-        for (OutFormat f : this.formats) {
-            this.urlsOut.add(f.end(response));
+            var request = HttpRequest.newBuilder().uri(URI.create(this.urlAddress)).GET().build();
+
+            var client = HttpClient.newHttpClient();
+            HttpResponse<String> response = null;
+            try {
+                response = client.send(request, HttpResponse.BodyHandlers.ofString());
+            } catch (IOException | InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+            if (!response.headers().firstValue("Content-Type").orElse("").startsWith(this.contentType))
+                return;
+
+            // end formats check for output
+            for (OutFormat f : this.formats)
+                this.urlsOut.add(f.end(response));
+            ///////////////////////////////
+        }catch (IllegalArgumentException e){
+            System.out.println(this.urlAddress+" malformed");
+        }
+        catch (RuntimeException e){
+            System.out.println(this.urlAddress+" failed");
         }
     }
 }

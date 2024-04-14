@@ -1,6 +1,5 @@
 package ex2;
 
-
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -16,21 +15,18 @@ public class Controller {
     private static final int FORMAT = 0,
                              POOL = 1,
                              FILENAME = 2;
-    private String[] outputFormat;
-    private int poolSize;
+    private final String[] outputFormat;
+    private final int poolSize;
     private final String fileName;
-    private int numberOfLines;
     private final HashMap<String, ArrayList<String>> urlsIO;
     private final ExecutorService pool;
-    private ArrayList<OutFormat> format;
+    private final ArrayList<OutFormat> format;
 
     public Controller(String[] args) throws IOException {
         // take the data from argument vector
         this.outputFormat = args[FORMAT].split("");
         this.poolSize = Integer.parseInt(args[POOL]);
         this.fileName = args[FILENAME];
-        this.numberOfLines = 0;
-
         this.format = new ArrayList<>();
 
         addFormatOut();
@@ -43,16 +39,15 @@ public class Controller {
         readFile();
     }
 
-    private void addFormatOut(){
-        for(String f : this.outputFormat) {
+    private void addFormatOut() {
+        for(String f : this.outputFormat)
             this.format.add(new FormatFactory().createFormat(f));
-        }
     }
 
     private void readFile() throws IOException {
         try (BufferedReader reader = new BufferedReader(new FileReader((this.fileName)))) {
             String lineCont;
-            while ((lineCont = reader.readLine())!=null)
+            while ((lineCont = reader.readLine()) != null)
                 if (!this.urlsIO.containsKey(lineCont))
                     this.urlsIO.put(lineCont, new ArrayList<>());
         } catch (IOException ioe) {
@@ -67,31 +62,25 @@ public class Controller {
 
     // todo: this function need to call the threads
     public void crawl() throws IOException, InterruptedException {
-        System.out.println("crawl");
         ArrayList<Downloader> down = new ArrayList<>();
 
-        for (Map.Entry<String, ArrayList<String>> entry : this.urlsIO.entrySet()) {
-            down.add(new Downloader(entry.getKey(), entry.getValue(), this.format));
-        }
-        for (Downloader d: down){
-            this.pool.execute(d);
-            // d.start();
-        }
-        for (Downloader d: down){
+        for (Map.Entry<String, ArrayList<String>> entry : this.urlsIO.entrySet())
+            down.add(new Downloader(entry.getKey(), entry.getValue(), this.format, "image/"));
 
-            // d.join();
-        }
+        for (Downloader d: down)
+            this.pool.execute(d);
+
         pool.shutdown();
-        this.pool.awaitTermination(Long.MAX_VALUE, TimeUnit.NANOSECONDS);
+        boolean re =  this.pool.awaitTermination(Long.MAX_VALUE, TimeUnit.NANOSECONDS);
     }
-    public void print(){
+
+    public void print() {
         for (ArrayList<String> value : this.urlsIO.values()) {
-            for (String vf: value){
+            for (String vf: value)
                 System.out.print(vf+" ");
-            }
-            if (!value.isEmpty()){
+
+            if (!value.isEmpty())
                 System.out.println();
-            }
         }
     }
 }

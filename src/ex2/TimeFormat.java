@@ -14,9 +14,7 @@ public class TimeFormat implements OutFormat{
     }
 
     @Override
-    public void start(){
-        this.startTime = System.nanoTime();
-    }
+    public void start(){this.startTime = System.nanoTime();}
 
     @Override
     public String end(HttpResponse<String> response){

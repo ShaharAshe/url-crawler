@@ -2,7 +2,7 @@ package ex2;
 
 import java.net.http.HttpResponse;
 
-public class ImagTypeFormat implements OutFormat{
+public class ImagTypeFormat implements OutFormat {
     private String imageType;
 
     public ImagTypeFormat(){
