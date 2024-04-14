@@ -44,10 +44,10 @@ public class Downloader extends Thread{
                 this.urlsOut.add(f.end(response));
             ///////////////////////////////
         }catch (IllegalArgumentException e){
-            System.out.println(this.urlAddress+" malformed");
+            System.err.println(this.urlAddress+" malformed");
         }
         catch (RuntimeException e){
-            System.out.println(this.urlAddress+" failed");
+            System.err.println(this.urlAddress+" failed");
         }
     }
 }
