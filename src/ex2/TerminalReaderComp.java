@@ -11,13 +11,8 @@ public class TerminalReaderComp implements Read {
     }
 
     @Override
-    public ArrayList<String> operation() throws IOException {
-        System.out.println("TerminalReaderComp operation");
-        return (this.compress());
-    }
 
-    private ArrayList<String> compress() throws IOException {
-        System.out.println("TerminalReaderComp compress");
+    public ArrayList<String> readContent() throws IOException {
         ArrayList<String> fileCont;
         try (Scanner reader = new Scanner(System.in)) {
             fileCont = new ArrayList<>();

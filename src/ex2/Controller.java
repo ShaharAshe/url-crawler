@@ -43,7 +43,7 @@ public class Controller {
 
     private void readFile() throws IOException {
         try{
-           for (String lineCont : this.reader.operation())
+           for (String lineCont : this.reader.readContent())
                if (!this.urlsIO.containsKey(lineCont))
                    this.urlsIO.put(lineCont, new ArrayList<>());
         } catch (IOException ioe) {

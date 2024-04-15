@@ -4,8 +4,8 @@ public class Main {
     private static final int FILENAME = 2;
     public static void main(String[] args) {
         try{
-            /* You can also read urls from the terminal now */
-            //// Controller urlCrawler = new Controller(args, "image/", new TerminalReaderComp());
+            /* You can also read urls from the terminal */
+            // Controller urlCrawler = new Controller(args, "image/", new TerminalReaderComp());
 
             Controller urlCrawler = new Controller(args, "image/", new FileReaderComp(args[FILENAME]));
             urlCrawler.crawl();

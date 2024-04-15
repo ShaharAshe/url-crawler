@@ -12,20 +12,13 @@ public class FileReaderComp implements Read {
     }
 
     @Override
-    public ArrayList<String> operation() throws IOException {
-        System.out.println("FileReader operation");
-        return (this.compress());
-    }
-
-    private ArrayList<String> compress() throws IOException {
-        System.out.println("FileReader compress");
+    public ArrayList<String> readContent() throws IOException {
         ArrayList<String> fileCont;
         try (BufferedReader reader = new BufferedReader(new java.io.FileReader((this.fileName)))) {
             fileCont = new ArrayList<>();
             String lineCont;
-            while ((lineCont = reader.readLine()) != null) {
+            while ((lineCont = reader.readLine()) != null)
                 fileCont.add(lineCont);
-            }
         } catch (IOException ioe) {
             System.err.println("Reading from file " + fileName + " failed.");
             throw new IOException(ioe);
