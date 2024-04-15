@@ -1,21 +1,21 @@
 package ex2;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.function.Supplier;
+
 public class FormatFactory {
+    final static Map<String, Supplier<OutFormat>> map = new HashMap<>();
+
+    public static void register(FormatType type, Supplier<OutFormat> shapeCreateFunction) {
+        map.put(type.name(), shapeCreateFunction);
+    }
+
     public OutFormat createFormat(String f) {
-        switch (f) {
-            case "s" -> {
-                return new SizeFormat();
-            }
-            case "u" -> {
-                return new UrlFormat();
-            }
-            case "t" -> {
-                return new TimeFormat();
-            }
-            case "m" -> {
-                return new ImagTypeFormat();
-            }
-            default -> throw new IllegalArgumentException("format is not good!");
-        }
+        Supplier<OutFormat> shapeFunc = map.get(f);
+
+        if (shapeFunc != null)
+            return shapeFunc.get();
+        throw new IllegalArgumentException("format '"+f+"' is not good!");
     }
 }

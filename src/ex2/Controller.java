@@ -8,8 +8,7 @@ import java.util.concurrent.TimeUnit;
 
 public class Controller {
     private static final int FORMAT = 0,
-                             POOL = 1,
-                             FILENAME = 2;
+                             POOL = 1;
     private final String[] outputFormat;
     private final int poolSize;
     private final HashMap<String, ArrayList<String>> urlsIO;
@@ -17,6 +16,7 @@ public class Controller {
     private final ArrayList<OutFormat> format;
     private final String contentType;
     private final Read reader;
+    private final FormatFactory formatFactory;
 
     public Controller(String[] args, String contType, Read reader) throws IOException {
         // take the data from argument vector
@@ -32,13 +32,23 @@ public class Controller {
         // read the urls from the file and save the addresses in hash map by index
         this.urlsIO = new LinkedHashMap<>();
 
+        this.formatFactory = new FormatFactory();
+
+        registerFactory();
         addFormatOut();
         readFile();
     }
 
+    private void registerFactory(){
+        this.formatFactory.register(FormatType.s, SizeFormat::new);
+        this.formatFactory.register(FormatType.u, UrlFormat::new);
+        this.formatFactory.register(FormatType.t, TimeFormat::new);
+        this.formatFactory.register(FormatType.m, ImagTypeFormat::new);
+    }
+
     private void addFormatOut() {
         for(String f : this.outputFormat)
-            this.format.add(new FormatFactory().createFormat(f));
+            this.format.add(this.formatFactory.createFormat(f));
     }
 
     private void readFile() throws IOException {
@@ -51,7 +61,6 @@ public class Controller {
         }
     }
 
-    // todo: this function need to call the threads
     public void crawl() throws IOException, InterruptedException {
         ArrayList<Downloader> down = new ArrayList<>();
 
