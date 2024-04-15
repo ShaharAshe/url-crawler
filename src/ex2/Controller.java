@@ -1,7 +1,5 @@
 package ex2;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
 import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.ExecutorService;
@@ -14,36 +12,28 @@ public class Controller {
                              FILENAME = 2;
     private final String[] outputFormat;
     private final int poolSize;
-    private final String fileName;
     private final HashMap<String, ArrayList<String>> urlsIO;
     private final ExecutorService pool;
     private final ArrayList<OutFormat> format;
     private final String contentType;
+    private final Read reader;
 
-    public Controller(String[] args, String contType) throws IOException {
-        String fileNameTemp;
+    public Controller(String[] args, String contType, Read reader) throws IOException {
         // take the data from argument vector
         this.outputFormat = args[FORMAT].split("");
         this.poolSize = Integer.parseInt(args[POOL]);
-        try{
-            fileNameTemp = args[FILENAME];
-        }catch (Exception e){
-            fileNameTemp = "";
-        }
-
-        this.fileName = fileNameTemp;
         this.format = new ArrayList<>();
-
-        addFormatOut();
+        this.contentType = contType;
+        this.reader = reader;
 
         // creating the thread pool
         this.pool = Executors.newFixedThreadPool(this.poolSize);
 
         // read the urls from the file and save the addresses in hash map by index
         this.urlsIO = new LinkedHashMap<>();
-        readFile();
 
-        this.contentType = contType;
+        addFormatOut();
+        readFile();
     }
 
     private void addFormatOut() {
@@ -52,40 +42,12 @@ public class Controller {
     }
 
     private void readFile() throws IOException {
-        if (!this.fileName.isEmpty()) {
-            try (BufferedReader reader = new BufferedReader(new FileReader((this.fileName)))) {
-                String lineCont;
-                while ((lineCont = reader.readLine()) != null)
-                    if (!this.urlsIO.containsKey(lineCont))
-                        this.urlsIO.put(lineCont, new ArrayList<>());
-            } catch (IOException ioe) {
-                System.err.println("Reading from file " + fileName + " failed.");
-                throw new IOException(ioe);
-            }
-        }
-        else{
-            try (Scanner reader = new Scanner(System.in)) {
-                String lineCont;
-                final String endOut = "exit",
-                             outMsg = "write urls (or type '"+endOut+"' for stop)";
-                System.out.println(outMsg);
-                while (!(lineCont = reader.nextLine()).equals(endOut)) {
-                    if (!this.urlsIO.containsKey(lineCont))
-                        this.urlsIO.put(lineCont, new ArrayList<>());
-                    System.out.println(outMsg);
-                }
-            }catch (Exception e){
-                System.err.println("Reading from terminal is failed.");
-                throw new IOException(e);
-            }
-        }
-
-        // check if the urls file is empty
-        if (this.urlsIO.isEmpty()) {
-            if (!this.fileName.isEmpty())
-                throw new IOException("File " + fileName + " is empty.");
-            else
-                throw new IOException("No input urls were entered.");
+        try{
+           for (String lineCont : this.reader.operation())
+               if (!this.urlsIO.containsKey(lineCont))
+                   this.urlsIO.put(lineCont, new ArrayList<>());
+        } catch (IOException ioe) {
+            throw new IOException(ioe);
         }
     }
 

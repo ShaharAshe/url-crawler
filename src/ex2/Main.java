@@ -1,9 +1,13 @@
 package ex2;
 
 public class Main {
+    private static final int FILENAME = 2;
     public static void main(String[] args) {
         try{
-            Controller urlCrawler = new Controller(args, "image/");
+            /* You can also read urls from the terminal now */
+            //// Controller urlCrawler = new Controller(args, "image/", new TerminalReaderComp());
+
+            Controller urlCrawler = new Controller(args, "image/", new FileReaderComp(args[FILENAME]));
             urlCrawler.crawl();
             urlCrawler.print();
         } catch (ArrayIndexOutOfBoundsException e) {
