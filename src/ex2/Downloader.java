@@ -41,7 +41,6 @@ public abstract class Downloader extends Thread{
             }
             if (!response.headers().firstValue("Content-Type").orElse("").startsWith(this.contentType))
                 throw new Exception("");
-
         }catch (IllegalArgumentException e){
             System.err.println("'"+this.urlAddress+"' malformed");
         }
@@ -55,7 +54,7 @@ public abstract class Downloader extends Thread{
     void endC(){
         // end formats check for output
         for (OutFormat f : this.formats)
-            this.urlsOut.add(f.end(response));
+            this.urlsOut.add(f.end(this.response));
         ///////////////////////////////
     }
 }

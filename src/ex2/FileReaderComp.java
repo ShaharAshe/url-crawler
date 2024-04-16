@@ -17,6 +17,7 @@ public class FileReaderComp implements Read {
         try (BufferedReader reader = new BufferedReader(new java.io.FileReader((this.fileName)))) {
             fileCont = new ArrayList<>();
             String lineCont;
+
             while ((lineCont = reader.readLine()) != null)
                 fileCont.add(lineCont);
         } catch (IOException ioe) {

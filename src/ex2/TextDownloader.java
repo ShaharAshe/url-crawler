@@ -28,6 +28,5 @@ public class TextDownloader extends Downloader{
     protected void endC(){
         super.endC();
     }
-
 }
 

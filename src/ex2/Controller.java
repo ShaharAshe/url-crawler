@@ -59,7 +59,7 @@ public class Controller {
         }
     }
 
-    public void crawl() throws IOException, InterruptedException {
+    public void crawl() throws InterruptedException {
         ArrayList<Downloader> down = new ArrayList<>();
 
         /* You can also see output from text content */
