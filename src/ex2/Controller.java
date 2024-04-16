@@ -14,16 +14,14 @@ public class Controller {
     private final HashMap<String, ArrayList<String>> urlsIO;
     private final ExecutorService pool;
     private final ArrayList<OutFormat> format;
-    private final String contentType;
     private final Read reader;
     private final FormatFactory formatFactory;
 
-    public Controller(String[] args, String contType, Read reader) throws IOException {
+    public Controller(String[] args, Read reader) throws IOException {
         // take the data from argument vector
         this.outputFormat = args[FORMAT].split("");
         this.poolSize = Integer.parseInt(args[POOL]);
         this.format = new ArrayList<>();
-        this.contentType = contType;
         this.reader = reader;
 
         // creating the thread pool
@@ -64,8 +62,14 @@ public class Controller {
     public void crawl() throws IOException, InterruptedException {
         ArrayList<Downloader> down = new ArrayList<>();
 
+        /* You can also see output from text content */
+//        for (Map.Entry<String, ArrayList<String>> entry : this.urlsIO.entrySet())
+//            down.add(new TextDownloader(entry.getKey(), entry.getValue(), this.format));
+
         for (Map.Entry<String, ArrayList<String>> entry : this.urlsIO.entrySet())
-            down.add(new Downloader(entry.getKey(), entry.getValue(), this.format, this.contentType));
+            down.add(new ImageDownloader(entry.getKey(), entry.getValue(), this.format));
+
+
 
         for (Downloader d: down)
             this.pool.execute(d);

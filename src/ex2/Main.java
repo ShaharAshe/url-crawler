@@ -7,7 +7,7 @@ public class Main {
             /* You can also read urls from the terminal */
             // Controller urlCrawler = new Controller(args, "image/", new TerminalReaderComp());
 
-            Controller urlCrawler = new Controller(args, "image/", new FileReaderComp(args[FILENAME]));
+            Controller urlCrawler = new Controller(args, new FileReaderComp(args[FILENAME]));
             urlCrawler.crawl();
             urlCrawler.print();
         } catch (ArrayIndexOutOfBoundsException e) {
