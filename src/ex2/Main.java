@@ -5,7 +5,7 @@ public class Main {
     public static void main(String[] args) {
         try{
             /* You can also read urls from the terminal */
-            // Controller urlCrawler = new Controller(args, "image/", new TerminalReaderComp());
+            // Controller urlCrawler = new Controller(args, new TerminalReaderComp());
 
             Controller urlCrawler = new Controller(args, new FileReaderComp(args[FILENAME]));
             urlCrawler.crawl();
