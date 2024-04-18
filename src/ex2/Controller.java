@@ -78,13 +78,25 @@ public class Controller {
         boolean re =  this.pool.awaitTermination(Long.MAX_VALUE, TimeUnit.NANOSECONDS);
     }
 
-    public void print() {
+    public void print() throws InterruptedException {
         for (ArrayList<String> value : this.urlsIO.values()) {
-            for (String vf: value)
-                System.out.print(vf+" ");
-
-            if (!value.isEmpty())
-                System.out.println();
+            try {
+                if (!value.isEmpty() && value.get(0).isEmpty()) {
+                    throw new RuntimeException(value.get(1));
+                } else {
+                    for (String vf : value)
+                        System.out.print(vf + " ");
+                    if (!value.isEmpty())
+                        System.out.println();
+                }
+            }
+            catch (RuntimeException e){
+                System.err.println(e.getMessage());
+                System.err.flush();
+            }
         }
+
+//        for (Map.Entry<String, ArrayList<String>> entry : this.urlsIO.entrySet())
+//            System.out.println("key: "+entry.getKey());
     }
 }

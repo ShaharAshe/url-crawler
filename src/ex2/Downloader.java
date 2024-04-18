@@ -31,7 +31,6 @@ public abstract class Downloader extends Thread{
     public void run() {
         try {
             var request = HttpRequest.newBuilder().uri(URI.create(this.urlAddress)).GET().build();
-
             var client = HttpClient.newHttpClient();
 
             try {
@@ -42,10 +41,12 @@ public abstract class Downloader extends Thread{
             if (!response.headers().firstValue("Content-Type").orElse("").startsWith(this.contentType))
                 throw new Exception("");
         }catch (IllegalArgumentException e){
-            System.err.println("'"+this.urlAddress+"' malformed");
+            this.urlsOut.add("");
+            this.urlsOut.add("'"+this.urlAddress+"' malformed");
         }
         catch (RuntimeException e){
-            System.err.println("'"+this.urlAddress+"' failed");
+            this.urlsOut.add("");
+            this.urlsOut.add("'"+this.urlAddress+"' failed");
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

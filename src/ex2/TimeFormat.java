@@ -14,11 +14,11 @@ public class TimeFormat implements OutFormat{
     }
 
     @Override
-    public void start(){this.startTime = System.nanoTime();}
+    public void start(){this.startTime = System.currentTimeMillis();}
 
     @Override
     public String end(HttpResponse<String> response){
-        this.endTime = System.nanoTime();
+        this.endTime = System.currentTimeMillis();
         this.totalTime = this.endTime - this.startTime;
         return Long.toString(this.totalTime);
     }
