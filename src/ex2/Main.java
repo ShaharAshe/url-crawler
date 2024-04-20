@@ -1,12 +1,22 @@
 package ex2;
 
+/**
+ * Main class for executing the program.
+ */
 public class Main {
-    private static final int FILENAME = 2;
+    private static final int FILENAME = 2; // Index for filename argument
+
+    /**
+     * Main method to start the program.
+     *
+     * @param args The command-line arguments
+     */
     public static void main(String[] args) {
         try{
+            // Create a controller and execute the crawl process
             Controller urlCrawler = new Controller(args, new FileReaderComp(args[FILENAME]));
-            urlCrawler.crawl(); // crawl the url that given in the argument vector
-            urlCrawler.print(); // Prints the output in the desired format
+            urlCrawler.crawl(); // Crawl the URLs from the argument
+            urlCrawler.print(); // Print the output in the desired format
         } catch (ArrayIndexOutOfBoundsException e) {
             System.err.println("Usage: java Main <output format> <pool size> <file name>");
         } catch (NumberFormatException e) {

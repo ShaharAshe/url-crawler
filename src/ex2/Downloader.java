@@ -7,13 +7,24 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.ArrayList;
 
+/**
+ * Downloader is an abstract class for downloading content from URLs.
+ */
 public abstract class Downloader extends Thread{
-    protected final String urlAddress;
-    protected final ArrayList<String> urlsOut;
-    protected final ArrayList<OutFormat> formats;
-    protected final String contentType;
-    private HttpResponse<String> response = null;
+    protected final String urlAddress; // The URL to download from
+    protected final ArrayList<String> urlsOut; // The output storage for downloaded content
+    protected final ArrayList<OutFormat> formats; // The list of output formats to apply
+    protected final String contentType; // Expected content type for validation
+    private HttpResponse<String> response = null; // Stores the HTTP response
 
+    /**
+     * Constructor for Downloader.
+     *
+     * @param urlAddr   The URL to download from
+     * @param urlArr    The storage for output content
+     * @param formatsG  The list of output formats to apply
+     * @param type      The expected content type for validation
+     */
     public Downloader(String urlAddr, ArrayList<String> urlArr, ArrayList<OutFormat> formatsG, String type) {
         this.urlsOut = urlArr;
         this.urlAddress = urlAddr;
@@ -21,13 +32,18 @@ public abstract class Downloader extends Thread{
         this.contentType = type;
     }
 
+    /**
+     * Starts the processing of output formats.
+     */
     void startC(){
-        // start formats check for output
         for (OutFormat f : formats)
             f.start();
-        /////////////////////////////////
     }
 
+    /**
+     * Initiates the download process, sends an HTTP request, and applies formats.
+     */
+    @Override
     public void run() {
         try {
             var request = HttpRequest.newBuilder().uri(URI.create(this.urlAddress)).GET().build();
@@ -39,7 +55,7 @@ public abstract class Downloader extends Thread{
                 throw new RuntimeException(e);
             }
             if (!response.headers().firstValue("Content-Type").orElse("").startsWith(this.contentType))
-                throw new Exception("");
+                throw new Exception("Invalid content type");
         }catch (IllegalArgumentException e){
             this.urlsOut.add("");
             this.urlsOut.add("'"+this.urlAddress+"' malformed");
@@ -52,10 +68,11 @@ public abstract class Downloader extends Thread{
         }
     }
 
+    /**
+     * Ends the processing of output formats and stores the results.
+     */
     void endC(){
-        // end formats check for output
         for (OutFormat f : this.formats)
             this.urlsOut.add(f.end(this.response));
-        ///////////////////////////////
     }
 }
