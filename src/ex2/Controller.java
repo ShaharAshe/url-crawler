@@ -9,13 +9,13 @@ import java.util.concurrent.TimeUnit;
 public class Controller {
     private static final int FORMAT = 0,
                              POOL = 1;
-    private final String[] outputFormat;
+    private final String[] outputFormat; // save the desire format that given
     private final int poolSize;
-    private final HashMap<String, ArrayList<String>> urlsIO;
-    private final ExecutorService pool;
-    private final ArrayList<OutFormat> format;
-    private final Read reader;
-    private final FormatFactory formatFactory;
+    private final HashMap<String, ArrayList<String>> urlsIO; // save the url and the output. the keys are the urls and the values are the output.
+    private final ExecutorService pool; // thread pool
+    private final ArrayList<OutFormat> format; // save the format class shows.
+    private final Read reader; // the class that read from file/ terminal/ etc ...
+    private final FormatFactory formatFactory; // the factory for the format class shows
 
     public Controller(String[] args, Read reader) throws IOException {
         // take the data from argument vector
@@ -61,15 +61,8 @@ public class Controller {
 
     public void crawl() throws InterruptedException {
         ArrayList<Downloader> down = new ArrayList<>();
-
-        /* You can also see output from text content */
-//        for (Map.Entry<String, ArrayList<String>> entry : this.urlsIO.entrySet())
-//            down.add(new TextDownloader(entry.getKey(), entry.getValue(), this.format));
-
         for (Map.Entry<String, ArrayList<String>> entry : this.urlsIO.entrySet())
             down.add(new ImageDownloader(entry.getKey(), entry.getValue(), this.format));
-
-
 
         for (Downloader d: down)
             this.pool.execute(d);
@@ -78,7 +71,7 @@ public class Controller {
         boolean re =  this.pool.awaitTermination(Long.MAX_VALUE, TimeUnit.NANOSECONDS);
     }
 
-    public void print() throws InterruptedException {
+    public void print(){
         for (ArrayList<String> value : this.urlsIO.values()) {
             try {
                 if (!value.isEmpty() && value.get(0).isEmpty()) {
@@ -95,8 +88,5 @@ public class Controller {
                 System.err.flush();
             }
         }
-
-//        for (Map.Entry<String, ArrayList<String>> entry : this.urlsIO.entrySet())
-//            System.out.println("key: "+entry.getKey());
     }
 }
