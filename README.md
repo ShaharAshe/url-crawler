@@ -7,6 +7,7 @@
 
 - [About Me](#about-me)
 - [Overview](#overview)
+- [JavaDoc](#-javadoc)
 - [Project Structure](#-project-structure)
 - [Usage](#-usage)
 - [Design Patterns](#-design-patterns)
@@ -26,6 +27,14 @@ This project is a Java-based multi-threaded web crawler. It reads URLs from a sp
 
 ---
 
+## 📚 JavaDoc
+To view the generated JavaDoc:
+
+1. Open the [doc](./doc) directory.
+2. Locate the [index.html](./doc/index.html) file.
+3. Open it with a web browser to explore the documentation.
+
+---
 ## 📂 Project Structure
 
 The project contains several Java classes with the following roles:
